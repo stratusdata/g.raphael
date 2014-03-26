@@ -40,7 +40,7 @@
  > Usage
  | r.piechart(cx, cy, r, values, opts)
  \*/
- 
+
 (function () {
 
     function Piechart(paper, cx, cy, r, values, opts) {
@@ -94,12 +94,12 @@
                 total += values[i];
                 values[i] = { value: values[i], order: i, valueOf: function () { return this.value; } };
             }
-            
+
             //values are sorted numerically
             values.sort(function (a, b) {
                 return b.value - a.value;
             });
-            
+
             for (i = 0; i < len; i++) {
                 if (defcut && values[i] * 100 / total < minPercent) {
                     cut = i;
@@ -121,7 +121,11 @@
                 var mangle = angle - 360 * values[i] / total / 2;
 
                 if (!i) {
-                    angle = 90 - mangle;
+                    if (opts.startFromFixedAngle) {
+                        angle = opts.startFromFixedAngle;
+                    } else {
+                        angle = 90 - mangle;
+                    }
                     mangle = angle - 360 * values[i] / total / 2;
                 }
 
@@ -282,15 +286,15 @@
 
         return chart;
     };
-    
+
     //inheritance
     var F = function() {};
     F.prototype = Raphael.g;
     Piechart.prototype = new F;
-    
+
     //public
     Raphael.fn.piechart = function(cx, cy, r, values, opts) {
         return new Piechart(this, cx, cy, r, values, opts);
     }
-    
+
 })();
